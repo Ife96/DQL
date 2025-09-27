@@ -156,7 +156,6 @@ JOIN sales_reps sr ON sr.id = a.sales_rep_id
 JOIN region r ON r.id = sr.region_id
 ORDER BY Account_name;
 
--- 
 SELECT accounts.name AS Account_name, SUM(orders.total) AS Quantity_of_order_placed_per_account
 FROM accounts
 JOIN orders
@@ -171,6 +170,25 @@ SELECT
 FROM accounts
 JOIN sales_reps ON accounts.sales_rep_id = sales_reps.id
 GROUP BY Sales_rep;
+
+-- How many of the sales reps have more than 5 accounts that they manage?
+SELECT s.id, s.name, COUNT(*) num_accounts
+FROM accounts a
+JOIN sales_reps s
+ON s.id = a.sales_rep_id
+GROUP BY s.id, s.name
+HAVING COUNT(*) > 5
+ORDER BY num_accounts;
+
+-- Subquery
+SELECT COUNT(*) num_reps_above5
+FROM (SELECT s.id, s.name, COUNT(*) num_accounts
+        FROM accounts a
+        JOIN sales_reps s
+        ON s.id = a.sales_rep_id
+        GROUP BY s.id, s.name
+        HAVING COUNT(*) > 5
+        ORDER BY num_accounts) AS Table1;
 
 --Exercise (Gives all the records that match on accounts tables and sales_rep table)
 SELECT 
